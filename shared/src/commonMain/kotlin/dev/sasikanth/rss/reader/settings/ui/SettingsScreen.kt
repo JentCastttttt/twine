@@ -36,7 +36,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider as MaterialDivider
@@ -145,6 +144,17 @@ internal fun SettingsScreen(
           }
 
           item {
+            ShowReaderViewSettingItem(
+              showReaderView = state.showReaderView,
+              onValueChanged = { newValue ->
+                settingsPresenter.dispatch(SettingsEvent.ToggleShowReaderView(newValue))
+              }
+            )
+          }
+
+          item { Divider(24.dp) }
+
+          item {
             BrowserTypeSettingItem(
               browserType = state.browserType,
               onBrowserTypeChanged = { newBrowserType ->
@@ -230,6 +240,53 @@ internal fun SettingsScreen(
     containerColor = AppTheme.colorScheme.surfaceContainerLowest,
     contentColor = Color.Unspecified,
   )
+}
+
+@Composable
+private fun ShowReaderViewSettingItem(showReaderView: Boolean, onValueChanged: (Boolean) -> Unit) {
+  var checked by remember(showReaderView) { mutableStateOf(showReaderView) }
+  Box(
+    modifier =
+      Modifier.clickable {
+        checked = !checked
+        onValueChanged(!showReaderView)
+      }
+  ) {
+    Row(
+      modifier = Modifier.padding(start = 24.dp, top = 16.dp, end = 24.dp, bottom = 20.dp),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Column(modifier = Modifier.weight(1f)) {
+        Text(
+          LocalStrings.current.settingsShowReaderViewTitle,
+          style = MaterialTheme.typography.titleMedium,
+          color = AppTheme.colorScheme.textEmphasisHigh
+        )
+        Text(
+          LocalStrings.current.settingsShowReaderViewSubtitle,
+          style = MaterialTheme.typography.labelLarge,
+          color = AppTheme.colorScheme.textEmphasisMed
+        )
+      }
+
+      Spacer(Modifier.width(16.dp))
+
+      MaterialTheme(
+        colorScheme =
+          darkColorScheme(
+            primary = AppTheme.colorScheme.tintedSurface,
+            onPrimary = AppTheme.colorScheme.tintedForeground,
+            outline = AppTheme.colorScheme.outline,
+            surfaceVariant = AppTheme.colorScheme.surfaceContainer
+          )
+      ) {
+        Switch(
+          checked = checked,
+          onCheckedChange = { checked -> onValueChanged(checked) },
+        )
+      }
+    }
+  }
 }
 
 @Composable

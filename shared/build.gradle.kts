@@ -68,6 +68,8 @@ kotlin {
     }
   }
 
+  compilerOptions { freeCompilerArgs.add("-Xexpect-actual-classes") }
+
   sourceSets {
     all {
       languageSettings.optIn("androidx.compose.material.ExperimentalMaterialApi")
@@ -94,6 +96,7 @@ kotlin {
       api(libs.decompose)
       implementation(libs.decompose.extensions.compose)
       api(libs.essenty.lifecycle)
+      implementation(libs.essenty.lifecycle.coroutines)
       api(libs.essenty.backhandler)
       implementation(libs.kotlininject.runtime)
       implementation(libs.androidx.collection)
